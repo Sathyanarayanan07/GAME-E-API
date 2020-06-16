@@ -1,6 +1,6 @@
 // MongoDB connections
+const config = require('config');
 const MongoClient = require('mongodb').MongoClient;
-const { url, dbName } = require('../config/config');
 const ObjectId = require('mongodb').ObjectId;
 
 class MongoDb {
@@ -12,9 +12,9 @@ class MongoDb {
     }
 
     static connect = async (collectionName) => {
-        const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = new MongoClient(config.get('dbConfig.url'), { useNewUrlParser: true, useUnifiedTopology: true });
         await client.connect();
-        const db = client.db(dbName);
+        const db = client.db(config.get('dbConfig.dbName'));
         const collection = db.collection(collectionName);
         return new MongoDb(client, collection);
     }
@@ -23,8 +23,12 @@ class MongoDb {
         return await this.collection.findOne(filter);
     }
 
-    findAll = async () => {
-        return await this.collection.find().toArray();
+    findAll = async (filter = {},limit=5,skip=0) => {
+        return await this.collection.find(filter).limit(limit).skip(skip).toArray();
+    }
+
+    getCount = async(filter = {}) => {
+        return await this.collection.countDocuments(filter);
     }
 
     insertOne = async (document) => {
