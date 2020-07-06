@@ -1,1 +1,1 @@
-Sharp-E API using Node,Express and MongoDB
+GAME-E API using Node,Express and MongoDB
