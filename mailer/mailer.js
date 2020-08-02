@@ -12,8 +12,8 @@ class Mailer {
           port: 465,
           secure: true,
           auth: {
-            user: config.get('dbConfig.email'),
-            pass: config.get('dbConfig.email-password')
+            user: process.env.MY_EMAIL,
+            pass: process.env.MY_PASS
           }
         }));
 
@@ -21,7 +21,7 @@ class Mailer {
       
         // send mail with defined transport object
         let info = await transporter.sendMail({
-          from: config.get('dbConfig.email'), // sender address
+          from: process.env.MY_EMAIL, // sender address
           to: recipient.user_email, // list of receivers
           subject: "Sharp-E Email Verification ✔", // Subject line
           text: "Confirm Email", // plain text body
